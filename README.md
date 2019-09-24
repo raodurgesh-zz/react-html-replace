@@ -61,7 +61,7 @@ class Demo extends Component {
 render(<Demo />, document.querySelector('#demo'));
 ```
 
-### Output
+### Output _(of above code)_
 
 <i>This is <b> xml string</b> with custom nexted markup,<b> we can get inner markup &amp; attribute through props.</b></i> <span name="raodurgesh" id="123" style="border: 1px solid rgb(204, 204, 204);">&nbsp; this is mention tag with id &amp; name attribute this is mention tag with id &amp; name attribute &nbsp;</span> <a href="http://google.com">#howdymody</a>
 
@@ -87,3 +87,11 @@ i.e ,
 **tag** :`bold , link`
 
 **props** : `innertext, href`
+
+## Getting started
+
+```js
+npm install
+npm start
+# go to localhost:3000 if it doesnt open automatically
+```
