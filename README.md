@@ -20,20 +20,18 @@ import reactHtmlReplace from 'react-html-replace';
 
 const Mention = ({ children, id, name }) => {
   return (
-    <span name={name} id={id}>
-      {children}
+    <span name={name} id={id} style={{ border: '1px solid #ccc' }}>
+      &nbsp;{children}&nbsp;
     </span>
   );
 };
-
-const HashTag = ({ tag }) => <span>{`#${tag}`}</span>;
 
 class Demo extends Component {
   render() {
     return (
       <div>
-        {reactHtmlReplace(
-          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> <hashtag tag="howdymody"></hashtag>`,
+        {parseText(
+          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> <hashtag tag="howdymody" href ="http://google.com"></hashtag>`,
           (tag, props) => {
             if (tag === 'bold') {
               return <b />;
@@ -50,8 +48,8 @@ class Demo extends Component {
               );
             }
             if (tag === 'hashtag') {
-              const { tag } = props;
-              return <HashTag tag={tag} />;
+              const { tag, href } = props;
+              return <a href={href}>{`#${tag}`}</a>;
             }
           }
         )}
@@ -65,7 +63,7 @@ render(<Demo />, document.querySelector('#demo'));
 
 ### Output
 
-<i>This is <b> xml string</b> with custom nexted markup,<b> we can get inner markup &amp; attribute through props.</b></i> <span name="raodurgesh" id="123" style="border: 1px solid rgb(204, 204, 204); padding: 0px 10px;"> this is mention tag with id &amp; name attribute </span>
+<i>This is <b> xml string</b> with custom nexted markup,<b> we can get inner markup &amp; attribute through props.</b></i> <span name="raodurgesh" id="123" style="border: 1px solid rgb(204, 204, 204);">&nbsp; this is mention tag with id &amp; name attribute this is mention tag with id &amp; name attribute &nbsp;</span> <a href="http://google.com">#howdymody</a>
 
 ## Params
 
