@@ -33,6 +33,13 @@
   "license": "MIT",
   "repository": "",
   "keywords": [
-    "react-component"
+    "react-component",
+    "react-replace",
+    "react",
+    "react-string",
+    "react-string-replace",
+    "react-html-parser",
+    "react-string-parse",
+    "recat-string-to-component"
   ]
 }
