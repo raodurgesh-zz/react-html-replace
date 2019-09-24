@@ -33,7 +33,7 @@ class Demo extends Component {
     return (
       <div>
         {reactHtmlReplace(
-          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> `,
+          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> <hashtag tag="howdymody"></hashtag>`,
           (tag, props) => {
             if (tag === 'bold') {
               return <b />;
