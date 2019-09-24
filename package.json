@@ -1,6 +1,6 @@
 {
   "name": "react-html-replace",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "A simple way to safely do html tag replacement with React components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -28,10 +28,13 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
   },
-  "author": "",
-  "homepage": "",
+  "author": {
+    "name": "Durgesh Rao",
+    "email": "durgesh.rao1@gmail.com",
+    "url": "https://github.com/raodurgesh"
+  },
   "license": "MIT",
-  "repository": "",
+  "repository": "https://github.com/raodurgesh/react-html-replace",
   "keywords": [
     "react-component",
     "react-replace",
@@ -40,6 +43,8 @@
     "react-string-replace",
     "react-html-parser",
     "react-string-parse",
-    "recat-string-to-component"
+    "recat-string-to-component",
+    "react-parser",
+    "react-html-parser"
   ]
 }
