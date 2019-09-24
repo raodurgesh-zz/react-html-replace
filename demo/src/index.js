@@ -11,14 +11,12 @@ const Mention = ({ children, id, name }) => {
   );
 };
 
-const HashTag = ({ tag }) => <span>{`#${tag}`}</span>;
-
 class Demo extends Component {
   render() {
     return (
       <div>
         {parseText(
-          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> <hashtag tag="howdymody"></hashtag>`,
+          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> <hashtag tag="howdymody" href ="http://google.com"></hashtag>`,
           (tag, props) => {
             if (tag === 'bold') {
               return <b />;
@@ -35,8 +33,8 @@ class Demo extends Component {
               );
             }
             if (tag === 'hashtag') {
-              const { tag } = props;
-              return <HashTag tag={tag} />;
+              const { tag, href } = props;
+              return <a href={href}>{`#${tag}`}</a>;
             }
           }
         )}

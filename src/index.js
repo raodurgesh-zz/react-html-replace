@@ -1,7 +1,7 @@
 import React from 'react';
 
 const extractPropsFromString = attr => {
-  let propsStr = attr.match(/\s*([\w]*)\s*=\s*"([\w]*)"/gi) || [];
+  let propsStr = attr.match(/\s*([^=]*)\s*=\s*"([^"]*)"/gi) || [];
   return Object.assign(
     {},
     ...propsStr
@@ -65,9 +65,19 @@ const parseText = (text = '', fn = () => {}) => {
         );
         const JsxEl = fn(tag, { ...props, innertext });
 
+        const cloneElement = el => {
+          if (el.props && el.props.children) {
+            return React.cloneElement(el, {}, cloneElement(el.props.children));
+          } else if (el.props) {
+            return React.cloneElement(el, {}, parseText(innertext, fn));
+          } else {
+            return [el, parseText(innertext, fn)];
+          }
+        };
+
         let el = null;
         if (JsxEl) {
-          el = React.cloneElement(JsxEl, {}, parseText(innertext, fn));
+          el = cloneElement(JsxEl);
         } else {
           el = `${substring} innertext </${tag}>`;
         }
