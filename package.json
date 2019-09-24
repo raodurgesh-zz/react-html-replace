@@ -1,7 +1,7 @@
 {
   "name": "react-html-replace",
   "version": "1.0.0",
-  "description": "react-html-replace React component",
+  "description": "A simple way to safely do html tag replacement with React components",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
