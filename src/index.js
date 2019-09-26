@@ -15,6 +15,22 @@ const extractPropsFromString = attr => {
   );
 };
 
+const cloneElement = (el, lastChild) => {
+  if (!el) return [];
+  if (!Array.isArray(lastChild)) lastChild = [lastChild];
+  if (el.props && el.props.children) {
+    return React.cloneElement(
+      el,
+      {},
+      cloneElement(el.props.children, lastChild)
+    );
+  } else if (el.props) {
+    return React.cloneElement(el, {}, [...lastChild]);
+  } else {
+    return [el, [...lastChild]];
+  }
+};
+
 /**
  * 
  * const fn = (tag, props) => {
@@ -32,9 +48,10 @@ const extractPropsFromString = attr => {
 
 const parseText = (text = '', fn = () => {}) => {
   let tags = [];
-  let jsxElements = [];
-  let prevIndex = -1;
-  const matches = text.matchAll(/<\s*(\/\s*)*([^>\s]*)[^><]*>/gi);
+  let preTreeLen = 0;
+  let nodes = [];
+  let matches = text.matchAll(/<\s*(\/\s*)*([^>\s]*)[^><]*>/gi);
+  matches = Array.from(matches);
 
   for (let match of matches) {
     let [substring, isClosing, tag] = match;
@@ -43,11 +60,6 @@ const parseText = (text = '', fn = () => {}) => {
     isClosing = (isClosing || '').trim();
     substring = (substring || '').trim();
     if (!isClosing) {
-      if (tags.length === 0) {
-        if (index > prevIndex) {
-          jsxElements.push(text.slice(prevIndex + 1, index));
-        }
-      }
       tags.push({ tag, substring, index });
     } else if (
       isClosing &&
@@ -55,35 +67,36 @@ const parseText = (text = '', fn = () => {}) => {
       tag === tags[tags.length - 1].tag
     ) {
       let tagObj = tags.pop();
-      if (tags.length === 0) {
-        const { substring, tag } = tagObj;
-        let attr = substring.replace(/[<>]/gi, '').replace(tag, '');
-        let props = extractPropsFromString(attr);
-        const innertext = text.slice(
+      const { substring, tag } = tagObj;
+      let attr = substring.replace(/[<>]/gi, '').replace(tag, '');
+      let props = extractPropsFromString(attr);
+      let JsxEl = fn(tag, { ...props });
+
+      JsxEl = cloneElement(
+        JsxEl,
+        text.slice(
           text.indexOf('>', tagObj.index) + 1,
-          index
-        );
-        const JsxEl = fn(tag, { ...props, innertext });
+          text.indexOf('<', tagObj.index + 1)
+        )
+      );
 
-        const cloneElement = el => {
-          if (el.props && el.props.children) {
-            return React.cloneElement(el, {}, cloneElement(el.props.children));
-          } else if (el.props) {
-            return React.cloneElement(el, {}, parseText(innertext, fn));
-          } else {
-            return [el, parseText(innertext, fn)];
-          }
-        };
+      nodes = [...nodes];
 
-        let el = null;
-        if (JsxEl) {
-          el = cloneElement(JsxEl);
-        } else {
-          el = `${substring} innertext </${tag}>`;
-        }
-        jsxElements.push(el);
-        prevIndex = text.indexOf('>', index);
+      if (preTreeLen <= tags.length) {
+        nodes = [
+          ...nodes,
+          JsxEl,
+          text.slice(
+            text.indexOf('>', index) + 1,
+            text.indexOf('<', index + 1) == -1
+              ? Infinity
+              : text.indexOf('<', index + 1)
+          )
+        ];
+      } else {
+        nodes = cloneElement(JsxEl, nodes);
       }
+      preTreeLen = tags.length;
     } else {
       throw Error('Invalid string, no matching tag "' + tag + '"');
     }
@@ -95,10 +108,10 @@ const parseText = (text = '', fn = () => {}) => {
         '"'
     );
   }
-  if (text.length - 1 > prevIndex) {
-    jsxElements.push(text.slice(prevIndex + 1));
-  }
-  return jsxElements;
+  return [
+    text.slice(0, text.indexOf('<') == -1 ? Infinity : text.indexOf('<')),
+    ...nodes
+  ];
 };
 
 export default parseText;

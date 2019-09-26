@@ -16,9 +16,10 @@ $ npm install --save react-html-replace
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 
-import reactHtmlReplace from 'react-html-replace';
+import reactHtmlReplace from '../../src';
 
-const Mention = ({ children, id, name }) => {
+const Mention = props => {
+  const { children, id, name } = props;
   return (
     <span name={name} id={id} style={{ border: '1px solid #ccc' }}>
       &nbsp;{children}&nbsp;
@@ -31,7 +32,7 @@ class Demo extends Component {
     return (
       <div>
         {reactHtmlReplace(
-          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attribute </mention> <hashtag tag="howdymody" href ="http://google.com"></hashtag>`,
+          `<italic>This is <bold> xml string</bold> with custom nexted markup,<bold> we can get inner markup & attribute  through props.</bold></italic> <mention id ="123" name ="raodurgesh">  this is mention tag with id & name attributes </mention> <hashtag tag="howdymody" href ="http://google.com"></hashtag>`,
           (tag, props) => {
             if (tag === 'bold') {
               return <b />;
@@ -40,12 +41,8 @@ class Demo extends Component {
               return <i />;
             }
             if (tag === 'mention') {
-              const { name, id, innertext } = props;
-              return (
-                <Mention name={name} id={id}>
-                  {innertext}
-                </Mention>
-              );
+              const { name, id } = props;
+              return <Mention name={name} id={id}></Mention>;
             }
             if (tag === 'hashtag') {
               const { tag, href } = props;
@@ -69,14 +66,14 @@ render(<Demo />, document.querySelector('#demo'));
 
 `import reactHtmlReplace from 'react-html-replace';`
 
-`reactHtmlReplace(`**xmlstring**, **callbackfunction**`);`
+`reactHtmlReplace(xmlstring, callbackfunction);`
 
 **xmlstring** : _the html string must have opening and closing tags._
 
 **callbackfunction** :
 
 - tag : _(html custom tag)_
-- Props : _Attributes of tag and innerhtml between the tag_
+- Props : \_Attributes of tag
 
 i.e ,
 
@@ -84,9 +81,11 @@ i.e ,
 
 **callbackfunction** : `(tag, props)`:
 
-**tag** :`bold , link`
+**tag** : `bold , link`
 
-**props** : `innertext, href`
+**props** : `href`
+
+**children** : `In react component, we can have special React.Children as array`_(as show in Mention Component)_
 
 ## Getting started
 
