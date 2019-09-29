@@ -16,7 +16,7 @@ $ npm install --save react-html-replace
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 
-import reactHtmlReplace from '../../src';
+import reactHtmlReplace from 'react-html-replace';
 
 const Mention = props => {
   const { children, id, name } = props;
